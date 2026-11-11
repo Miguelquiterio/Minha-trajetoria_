@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+
+    body {
+      background: #09090f;
+      color: #e9e9f5;
+      font-family: system-ui, sans-serif;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+    }
+
+    .calculadora {
+      background: #12121c;
+      border: 1px solid #24243a;
+      border-radius: 20px;
+      padding: 20px;
+      width: 300px;
+    }
+
+    #visor {
+      background: #09090f;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: right;
+      font-size: 2rem;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .teclas {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      padding: 16px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 12px;
+      background: #24243a;
+      color: #e9e9f5;
+      cursor: pointer;
+    }
+
+    button:hover { background: #34344f; }
+
+    .operador { background: #8b5cf6; }
+    .operador:hover { background: #7c4ae8; }
+
+    .voltar {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      color: #9a9ab5;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculadora">
+    <div id="visor">0</div>
+
+    <div class="teclas">
+      <button onclick="limpar()">C</button>
+      <button onclick="escolherOperador('/')" class="operador">÷</button>
+      <button onclick="escolherOperador('*')" class="operador">×</button>
+      <button onclick="escolherOperador('-')" class="operador">−</button>
+
+      <button onclick="digitar('7')">7</button>
+      <button onclick="digitar('8')">8</button>
+      <button onclick="digitar('9')">9</button>
+      <button onclick="escolherOperador('+')" class="operador">+</button>
+
+      <button onclick="digitar('4')">4</button>
+      <button onclick="digitar('5')">5</button>
+      <button onclick="digitar('6')">6</button>
+      <button onclick="digitar('.')">.</button>
+
+      <button onclick="digitar('1')">1</button>
+      <button onclick="digitar('2')">2</button>
+      <button onclick="digitar('3')">3</button>
+      <button onclick="calcular()" class="operador">=</button>
+
+      <button onclick="digitar('0')" style="grid-column: span 4">0</button>
+    </div>
+
+    <a class="voltar" href="index.html">← Voltar para a trajetória</a>
+  </div>
+
+  <script>
+    // Variáveis: guardam o que está acontecendo na calculadora
+    let atual = "";      // número que estou digitando
+    let anterior = "";   // primeiro número da conta
+    let operador = "";   // + - * /
+
+    const visor = document.getElementById("visor");
+
+    // Chamada quando clico num número
+    function digitar(numero) {
+      atual = atual + numero;
+      visor.textContent = atual;
+    }
+
+    // Chamada quando clico em + - × ÷
+    function escolherOperador(op) {
+      if (atual === "") return;   // se não digitei nada, não faz nada
+      anterior = atual;           // guarda o primeiro número
+      atual = "";                 // limpa para digitar o segundo
+      operador = op;
+    }
+
+    // Chamada quando clico em =
+    function calcular() {
+      if (anterior === "" || atual === "") return;
+
+      const a = Number(anterior);
+      const b = Number(atual);
+      let resultado;
+
+      // Condições (if / else if), como na sua Lanchonete
+      if (operador === "+") {
+        resultado = a + b;
+      } else if (operador === "-") {
+        resultado = a - b;
+      } else if (operador === "*") {
+        resultado = a * b;
+      } else if (operador === "/") {
+        resultado = b === 0 ? "Erro" : a / b;
+      }
+
+      visor.textContent = resultado;
+      atual = String(resultado);
+      anterior = "";
+      operador = "";
+    }
+
+    // Chamada quando clico em C
+    function limpar() {
+      atual = "";
+      anterior = "";
+      operador = "";
+      visor.textContent = "0";
+    }
+  </script>
+</body>
+</html>

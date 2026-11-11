@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minha trajetória na programação</title>
+
+  <style>
+    /* ===== CORES (mude aqui para mudar o tema) ===== */
+    :root{--fundo:#09090f;--card:#12121c;--borda:#24243a;--texto:#e9e9f5;--cinza:#9a9ab5;--azul:#4f8cff;--roxo:#8b5cf6}
+    *{box-sizing:border-box;margin:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--fundo);color:var(--texto);font-family:system-ui,sans-serif;line-height:1.6}
+    a{color:inherit;text-decoration:none}
+
+    /* ===== MENU ===== */
+    .menu{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;padding:16px 5%;background:rgba(9,9,15,.85);border-bottom:1px solid var(--borda)}
+    .menu nav{display:flex;gap:20px;color:var(--cinza)}
+
+    /* ===== INÍCIO ===== */
+    .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:100px 5% 40px;max-width:1000px;margin:0 auto}
+    .hero h1{font-size:clamp(2.2rem,7vw,4.5rem);line-height:1.1;margin-bottom:20px}
+    .hero p{color:var(--cinza);font-size:1.15rem;max-width:55ch;margin-bottom:30px}
+    .botao{background:linear-gradient(135deg,var(--azul),var(--roxo));padding:14px 28px;border-radius:999px;font-weight:bold;transition:transform .2s;display:inline-block}
+    .botao:hover{transform:translateY(-3px)}
+
+    /* ===== SEÇÕES E CARDS ===== */
+    .secao{max-width:1000px;margin:0 auto;padding:80px 5%}
+    .secao h2{font-size:clamp(1.6rem,4vw,2.4rem);margin-bottom:30px}
+    .texto{color:var(--cinza);max-width:60ch;margin-bottom:30px}
+    .card{background:var(--card);border:1px solid var(--borda);border-radius:16px;padding:24px;display:block}
+    .card p{color:var(--cinza)}
+    .card h3{margin-bottom:8px}
+    .tcc{border-color:var(--roxo)}
+    .tcc .botao{margin-top:18px}
+    button.card{width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;transition:border-color .2s}
+    button.card:hover{border-color:var(--roxo)}
+
+    /* ===== LINHA DO TEMPO ===== */
+    .linha-do-tempo{position:relative}
+    .linha-do-tempo::before{content:"";position:absolute;left:25px;top:0;bottom:0;width:2px;background:linear-gradient(var(--azul),var(--roxo))}
+    .etapa{display:flex;gap:20px;margin-bottom:30px;position:relative}
+    .etapa .card{flex:1}
+    .icone{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--fundo);border:2px solid var(--roxo);color:var(--azul);font-family:monospace;z-index:1}
+
+    /* ===== PROJETOS ===== */
+    .grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+    .foto{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;margin-bottom:16px;display:block}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin-top:16px}
+    .tags li{font-size:.8rem;padding:4px 12px;border:1px solid var(--borda);border-radius:999px;color:#b9c8ff}
+
+    /* ===== HABILIDADES ===== */
+    .habilidades{display:flex;flex-wrap:wrap;gap:16px}
+    .skill{background:var(--card);border:1px solid var(--borda);border-radius:14px;padding:16px 22px;font-weight:bold}
+    .skill span{color:var(--azul);font-family:monospace;margin-right:8px}
+    .vazio{font-style:italic}
+
+    /* ===== RODAPÉ ===== */
+    .rodape{text-align:center;padding:60px 5%;border-top:1px solid var(--borda)}
+    .redes{display:flex;justify-content:center;gap:24px;margin-top:20px;color:var(--cinza)}
+
+    /* ===== ANIMAÇÃO AO ROLAR ===== */
+    .aparecer{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+    .aparecer.visivel{opacity:1;transform:none}
+
+    /* ===== JANELAS (calculadora e login) ===== */
+    .janela{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;place-items:center;z-index:50;padding:16px;overflow:auto}
+    .janela.aberta{display:grid}
+    .fechar{position:absolute;top:14px;right:18px;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer}
+
+    /* Calculadora */
+    .calc{background:var(--card);border:1px solid var(--borda);border-radius:20px;padding:20px;width:300px}
+    #visor{background:var(--fundo);border-radius:12px;padding:20px;text-align:right;font-size:2rem;margin-bottom:16px;overflow:hidden}
+    .teclas{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .teclas button{padding:16px;font-size:1.2rem;border:none;border-radius:12px;background:var(--borda);color:var(--texto);cursor:pointer}
+    .teclas button:hover{background:#34344f}
+    .teclas .op{background:var(--roxo)}
+    .teclas .zero{grid-column:span 4}
+
+    /* Login */
+    .login{background:#000;max-width:420px;width:100%;padding:44px 36px;border-radius:8px}
+    .login .logo{color:#e50914;font-size:1.8rem;font-weight:900;letter-spacing:2px;margin-bottom:20px}
+    .login h3{font-size:1.8rem;margin-bottom:20px}
+    .login input{width:100%;padding:16px;margin-bottom:14px;border:none;border-radius:4px;background:#333;color:#fff;font-size:1rem}
+    .login .entrar{width:100%;padding:16px;border:none;border-radius:4px;background:#e50914;color:#fff;font-size:1rem;font-weight:bold;cursor:pointer}
+    #mensagem{margin-top:14px;color:#ffa00a;min-height:24px}
+    .login small{display:block;margin-top:18px;color:#8c8c8c}
+
+    /* ===== CELULAR ===== */
+    @media(max-width:640px){
+      .menu nav{display:none}
+      .icone{width:42px;height:42px}
+      .linha-do-tempo::before{left:20px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= MENU ================= -->
+  <header class="menu">
+    <a href="#topo">Minha jornada</a>
+    <nav>
+      <a href="#trajetoria">Trajetória</a>
+      <a href="#projetos">Projetos</a>
+      <a href="#tcc">TCC</a>
+      <a href="#experimentos">Experimentos</a>
+      <a href="#aprendi">O que aprendi</a>
+      <a href="#objetivos">Objetivos</a>
+    </nav>
+  </header>
+
+  <!-- ================= INÍCIO ================= -->
+  <section id="topo" class="hero">
+    <h1>Minha jornada no mundo da programação.</h1>
+    <p>Do primeiro código em HTML à construção de interfaces com React. Uma história de aprendizado, curiosidade e evolução.</p>
+    <a class="botao" href="#trajetoria">Conheça minha trajetória</a>
+  </section>
+
+  <!-- ================= LINHA DO TEMPO ================= -->
+  <section id="trajetoria" class="secao">
+    <h2>De onde comecei até aqui</h2>
+    <div class="linha-do-tempo">
+
+      <div class="etapa aparecer">
+        <span class="icone">&lt;/&gt;</span>
+        <div class="card"><h3>Etapa 1 — HTML</h3>
+          <p>Foi onde tudo começou. Conheci a estrutura das páginas web e aprendi como os elementos se organizam dentro de um site.</p></div>
+      </div>
+
+      <div class="etapa aparecer">
+        <span class="icone">{ }</span>
+        <div class="card"><h3>Etapa 2 — CSS</h3>
+          <p>Comecei a entender como transformar estruturas simples em páginas bonitas, trabalhando com cores, fontes, espaçamentos e layouts.</p></div>
+      </div>
+
+      <div class="etapa aparecer">
+        <span class="icone">JS</span>
+        <div class="card"><h3>Etapa 3 — JavaScript</h3>
+          <p>Dei um passo além e comecei a conhecer a lógica de programação, variáveis, funções, condições e interatividade.</p></div>
+      </div>
+
+      <div class="etapa aparecer">
+        <span class="icone">Py</span>
+        <div class="card"><h3>Etapa 4 — Python</h3>
+          <p>Explorei outra linguagem e comecei a entender melhor a lógica por trás dos programas, desenvolvendo pequenos exercícios e projetos.</p></div>
+      </div>
+
+      <div class="etapa aparecer">
+        <span class="icone">⚛</span>
+        <div class="card"><h3>Etapa 5 — React</h3>
+          <p>Cheguei a uma nova etapa dos meus estudos. Comecei a conhecer componentes, propriedades (props), organização de interfaces e a estrutura de aplicações modernas.</p></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= PROJETOS ================= -->
+  <section id="projetos" class="secao">
+    <h2>Projetos que marcaram minha evolução</h2>
+    <div class="grade">
+
+      <article class="card aparecer">
+        <img class="foto" data-img="cofre.svg" alt="Ilustração do projeto Cofre Virtual">
+        <h3>Cofre Virtual</h3>
+        <p>Projeto de estudo feito com HTML, CSS e JavaScript.</p>
+        <ul class="tags"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+      </article>
+
+      <article class="card aparecer">
+        <img class="foto" data-img="lanchonete.svg" alt="Ilustração do projeto Lanchonete">
+        <h3>Lanchonete</h3>
+        <p>Exercício de programação com estruturas condicionais.</p>
+        <ul class="tags"><li>Condicionais</li></ul>
+      </article>
+
+      <article class="card aparecer">
+        <img class="foto" data-img="lista.svg" alt="Ilustração do projeto Lista de compras">
+        <h3>Lista de compras</h3>
+        <p>Projeto para praticar lógica e organização de dados.</p>
+        <ul class="tags"><li>Lógica</li><li>Dados</li></ul>
+      </article>
+
+      <article class="card aparecer">
+        <img class="foto" data-img="cards-react.svg" alt="Ilustração do projeto Cards com React">
+        <h3>Cards com React</h3>
+        <p>Exercício utilizando componentes e propriedades.</p>
+        <ul class="tags"><li>React</li></ul>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= TCC ================= -->
+  <section id="tcc" class="secao">
+    <h2>Meu TCC: Cinelogo</h2>
+    <article class="card tcc aparecer">
+      <img class="foto" data-img="cinelogo.svg" alt="Ilustração do Cinelogo">
+      <h3>Cinelogo</h3>
+      <p>Nosso projeto de TCC, feito em grupo e desenvolvido em React. É inspirado no Letterboxd, com visual parecido e algumas diferenças: não tem imagem de fundo, mostra 4 cards com imagens de filmes e comentários, e tem barra de pesquisa.</p>
+      <ul class="tags"><li>React</li><li>Trabalho em grupo</li><li>Barra de pesquisa</li></ul>
+      <a id="link-cinelogo" class="botao" href="#" target="_blank" rel="noreferrer">Entrar no Cinelogo</a>
+    </article>
+  </section>
+
+  <!-- ================= EXPERIMENTOS ================= -->
+  <section id="experimentos" class="secao">
+    <h2>Meus experimentos</h2>
+    <div class="grade">
+
+      <button class="card aparecer" onclick="abrir('janela-calc')">
+        <img class="foto" data-img="calculadora.svg" alt="Ilustração da calculadora">
+        <h3>Calculadora</h3>
+        <p>Projeto de estudo com HTML, CSS e JavaScript. Clique para abrir.</p>
+      </button>
+
+      <button class="card aparecer" onclick="abrir('janela-login')">
+        <img class="foto" data-img="login.svg" alt="Ilustração da tela de login">
+        <h3>Tela de login</h3>
+        <p>Uma tela de login inspirada em plataformas de filmes. Clique para abrir.</p>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- ================= O QUE APRENDI ================= -->
+  <section id="aprendi" class="secao">
+    <h2>O que aprendi</h2>
+    <div class="habilidades">
+      <div class="skill aparecer"><span>&lt;/&gt;</span> HTML</div>
+      <div class="skill aparecer"><span>{ }</span> CSS</div>
+      <div class="skill aparecer"><span>JS</span> JavaScript</div>
+      <div class="skill aparecer"><span>Py</span> Python</div>
+      <div class="skill aparecer"><span>⚛</span> React</div>
+    </div>
+  </section>
+
+  <!-- ================= OBJETIVOS ================= -->
+  <section id="objetivos" class="secao">
+    <h2>Ainda estou apenas começando.</h2>
+    <p class="texto">A programação é uma jornada de aprendizado constante. Cada erro ensina alguma coisa, cada projeto representa uma nova experiência e cada linha de código é uma oportunidade de evoluir.</p>
+    <div class="grade">
+      <div class="card aparecer"><h3>Próximos objetivos</h3><p class="vazio">Escreva aqui seus objetivos.</p></div>
+      <div class="card aparecer"><h3>Tecnologias que quero aprender</h3><p class="vazio">Escreva aqui as tecnologias.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= RODAPÉ ================= -->
+  <footer class="rodape">
+    <p>Todo grande projeto começa com uma primeira linha de código.</p>
+    <p class="redes"><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">Instagram</a></p>
+  </footer>
+
+  <!-- ================= JANELA: CALCULADORA ================= -->
+  <div class="janela" id="janela-calc">
+    <button class="fechar" onclick="fechar()" aria-label="Fechar">×</button>
+    <div class="calc">
+      <div id="visor">0</div>
+      <div class="teclas">
+        <button onclick="limpar()">C</button>
+        <button class="op" onclick="escolherOperador('/')">÷</button>
+        <button class="op" onclick="escolherOperador('*')">×</button>
+        <button class="op" onclick="escolherOperador('-')">−</button>
+        <button onclick="digitar('7')">7</button>
+        <button onclick="digitar('8')">8</button>
+        <button onclick="digitar('9')">9</button>
+        <button class="op" onclick="escolherOperador('+')">+</button>
+        <button onclick="digitar('4')">4</button>
+        <button onclick="digitar('5')">5</button>
+        <button onclick="digitar('6')">6</button>
+        <button onclick="digitar('.')">.</button>
+        <button onclick="digitar('1')">1</button>
+        <button onclick="digitar('2')">2</button>
+        <button onclick="digitar('3')">3</button>
+        <button class="op" onclick="calcular()">=</button>
+        <button class="zero" onclick="digitar('0')">0</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JANELA: LOGIN ================= -->
+  <div class="janela" id="janela-login">
+    <button class="fechar" onclick="fechar()" aria-label="Fechar">×</button>
+    <div class="login">
+      <div class="logo">MINHAFLIX</div>
+      <h3>Entrar</h3>
+      <input type="email" id="email" placeholder="Email ou número de telefone">
+      <input type="password" id="senha" placeholder="Senha">
+      <button class="entrar" onclick="entrar()">Entrar</button>
+      <p id="mensagem"></p>
+      <small>Exercício visual: não existe login de verdade.</small>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    // ----- CONFIGURAÇÕES (só mexa aqui) -----
+    // Pasta onde estão as imagens (%20 = espaço no nome da pasta)
+    const PASTA = "Imagens/imagens%20(1)/imagens/";
+    // Link do Cinelogo. Exemplo: "https://..." ou "tcc/index.html". Vazio = botão sem link.
+    const LINK_CINELOGO = "";
+
+    // ----- Coloca o caminho certo em todas as imagens -----
+    document.querySelectorAll("img[data-img]").forEach(function (img) {
+      img.src = PASTA + img.dataset.img;
+    });
+
+    // ----- Link do Cinelogo -----
+    if (LINK_CINELOGO !== "") {
+      document.getElementById("link-cinelogo").href = LINK_CINELOGO;
+    }
+
+    // ----- Animação ao rolar -----
+    const vigia = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (entrada) {
+        if (entrada.isIntersecting) {
+          entrada.target.classList.add("visivel");
+        }
+      });
+    });
+    document.querySelectorAll(".aparecer").forEach(function (el) {
+      vigia.observe(el);
+    });
+
+    // ----- Abrir e fechar as janelas -----
+    function abrir(id) {
+      document.getElementById(id).classList.add("aberta");
+    }
+    function fechar() {
+      document.querySelectorAll(".janela").forEach(function (j) {
+        j.classList.remove("aberta");
+      });
+    }
+    // Tecla Esc também fecha
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") fechar();
+    });
+
+    // ----- Calculadora -----
+    let atual = "";
+    let anterior = "";
+    let operador = "";
+    const visor = document.getElementById("visor");
+
+    function digitar(numero) {
+      atual = atual + numero;
+      visor.textContent = atual;
+    }
+    function escolherOperador(op) {
+      if (atual === "") return;
+      anterior = atual;
+      atual = "";
+      operador = op;
+    }
+    function calcular() {
+      if (anterior === "" || atual === "") return;
+      const a = Number(anterior);
+      const b = Number(atual);
+      let resultado;
+      if (operador === "+") {
+        resultado = a + b;
+      } else if (operador === "-") {
+        resultado = a - b;
+      } else if (operador === "*") {
+        resultado = a * b;
+      } else if (operador === "/") {
+        resultado = b === 0 ? "Erro" : a / b;
+      }
+      visor.textContent = resultado;
+      atual = String(resultado);
+      anterior = "";
+      operador = "";
+    }
+    function limpar() {
+      atual = "";
+      anterior = "";
+      operador = "";
+      visor.textContent = "0";
+    }
+
+    // ----- Login (só visual) -----
+    function entrar() {
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+      const mensagem = document.getElementById("mensagem");
+      if (email === "" || senha === "") {
+        mensagem.textContent = "Preencha o email e a senha.";
+      } else if (senha.length < 4) {
+        mensagem.textContent = "A senha precisa ter pelo menos 4 caracteres.";
+      } else {
+        mensagem.textContent = "Tudo certo! (exercício, não há login real)";
+      }
+    }
+  </script>
+</body>
+</html>
